@@ -168,3 +168,13 @@ func (pq *PQueue) sink(k int) {
 		k = j
 	}
 }
+
+// ForEach handles each items in PQueue by do function.
+func (pq *PQueue) ForEach(do func(interface{})) {
+	pq.RLock()
+	defer pq.RUnlock()
+
+	for _, p := range pq.items {
+		do(p.value)
+	}
+}

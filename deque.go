@@ -146,3 +146,13 @@ func (s *Deque) Full() bool {
 
 	return s.capacity >= 0 && s.container.Len() >= s.capacity
 }
+
+// ForEach handles each items in Deque by do function.
+func (s *Deque) ForEach(do func(interface{})) {
+	s.RLock()
+	defer s.RUnlock()
+
+	for p := s.container.Front(); p != nil; p = p.Next() {
+		do(p.Value)
+	}
+}
