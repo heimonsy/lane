@@ -15,7 +15,7 @@ const (
 
 type item struct {
 	value    interface{}
-	priority int
+	priority int64
 }
 
 // PQueue is a heap priority queue data structure implementation.
@@ -25,10 +25,10 @@ type PQueue struct {
 	sync.RWMutex
 	items      []*item
 	elemsCount int
-	comparator func(int, int) bool
+	comparator func(int64, int64) bool
 }
 
-func newItem(value interface{}, priority int) *item {
+func newItem(value interface{}, priority int64) *item {
 	return &item{
 		value:    value,
 		priority: priority,
@@ -42,7 +42,7 @@ func (i *item) String() string {
 // NewPQueue creates a new priority queue with the provided pqtype
 // ordering type
 func NewPQueue(pqType PQType) *PQueue {
-	var cmp func(int, int) bool
+	var cmp func(int64, int64) bool
 
 	if pqType == MAXPQ {
 		cmp = max
@@ -61,7 +61,7 @@ func NewPQueue(pqType PQType) *PQueue {
 }
 
 // Push the value item into the priority queue with provided priority.
-func (pq *PQueue) Push(value interface{}, priority int) {
+func (pq *PQueue) Push(value interface{}, priority int64) {
 	item := newItem(value, priority)
 
 	pq.Lock()
@@ -73,7 +73,7 @@ func (pq *PQueue) Push(value interface{}, priority int) {
 
 // Pop and returns the highest/lowest priority item (depending on whether
 // you're using a MINPQ or MAXPQ) from the priority queue
-func (pq *PQueue) Pop() (interface{}, int) {
+func (pq *PQueue) Pop() (interface{}, int64) {
 	pq.Lock()
 	defer pq.Unlock()
 
@@ -93,7 +93,7 @@ func (pq *PQueue) Pop() (interface{}, int) {
 
 // Head returns the highest/lowest priority item (depending on whether
 // you're using a MINPQ or MAXPQ) from the priority queue
-func (pq *PQueue) Head() (interface{}, int) {
+func (pq *PQueue) Head() (interface{}, int64) {
 	pq.RLock()
 	defer pq.RUnlock()
 
@@ -125,11 +125,11 @@ func (pq *PQueue) size() int {
 	return pq.elemsCount
 }
 
-func max(i, j int) bool {
+func max(i, j int64) bool {
 	return i < j
 }
 
-func min(i, j int) bool {
+func min(i, j int64) bool {
 	return i > j
 }
 
